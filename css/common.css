@@ -14,9 +14,3 @@
 #to_top img:hover{
 	cursor: pointer;
 }
-.show{
-	display: block;
-}
-.hide{
-	display: none;
-}
