@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>显示文章</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="__CSS__/admin.css" rel="stylesheet" type="text/css" />
+    <script src="__JS__/jQuery-1.8.2.min.js"></script>
+    <script src="__JS__/public.js"></script>
+    <style>
+        select {
+            /*清除select默认样式*/
+            appearance:none;
+            -moz-appearance:none;
+            -webkit-appearance:none;
+            -ms-appearance:none;
+
+            border:1px solid #CCC;
+            width: 312px;
+            height: 40px;
+            /*自定义箭头的样式，记得背景一定要加 白色或其他*/
+            background:url("__IMG__/arrow.png") no-repeat scroll right center #fff;
+            /*ie下,原默认的箭头样式还是会显示，所以这里把自定义的样式给去除了*/
+            background:#fff\9;
+            color:#666;
+            font-size: 16px;
+            padding:8px;
+            outline:none;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="page-title" style="height: 30px;margin-bottom: 20px;">
+        <select id="category">
+            <option value="-1">请选择分类</option>
+            <option value="1">中医贴敷</option>
+            <option value="2">亚宝胃药</option>
+            <option value="3">亚宝九和</option>
+            <option value="4">视频中心</option>
+            <option value="5">春播医生</option>
+            <option value="6">人才招聘</option>
+            <option value="7">企业动态</option>
+            <option value="8">企业公告</option>
+            <option value="9">关于春播</option>
+            <option value="10">轮播器图片</option>
+            <option value="11">首页产品图片</option>
+        </select>
+        <h2 style="display: inline;color: #999">点击选择分类</h2>
+    </div>
+    <div class="operate">
+        <form action="{:U('newshow')}" method="post">
+            <input type="text" class="textBox length-long" placeholder="输入标题，可以少字，但不能错字..." name="where" value="{$where}"/>
+            <input type="submit" value="查询" class="tdBtn"/>
+        </form>
+    </div>
+    <div class="table">
+        <table class="list-style Interlaced">
+            <tr>
+                <th>ID编号</th>
+                <th>标题</th>
+                <th>展示图片</th>
+                <th>添加时间</th>
+                <th>简要信息</th>
+                <th>是否展示</th>
+                <th>操作</th>
+            </tr>
+            <volist name="list"  id="v">
+            <tr>
+                <td>{$v['nid']}</td>
+                <td class="td-name"><span class="ellipsis td-name block">{$v["title"]|mb_substr=0,15,'utf-8'}</span></td>
+                <td class="center"><img src="{$v.image}" style="width: 80px;height: 70px;"/></td>
+                <td class="center"><em>{:date("Y-m-d",$v["addtime"])}</em></td>
+                <td class="center">
+                    <em>{$v["content"]}</em>
+                </td>
+                <td class="center">
+                  <span class="type1" name="{$v['nid']}" id="{$v["show"]}" style="cursor: hand">
+                      <em>{$v["show"]==1?"展示":"隐藏"}</em>
+                </span>
+                </td>
+                <td class="center">
+                    <a href="{:U('Index/newedit?nid='.$v['nid'].'&type='.$type)}" title="编辑"><img src="__IMG__/icon_edit.gif"/></a>
+                    <a title="删除" href="javascript:;" class="del" name="{$v.nid}" ><img src="__IMG__/icon_drop.gif"/></a>
+                </td>
+            </tr>
+            </volist>
+
+        </table>
+        <div style="overflow:hidden;">
+            <div class="turnPage center fr">
+                <span>{$page}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //下拉菜单
+    $(function () {
+       //var value =$('#category').val();
+        $('#category').change(function () {
+            var value =$('#category').val();
+            $.ajax({
+                url:"{:U(newshow)}",
+                type:'post',
+                data:{'type':value},
+                success:function (data) {
+                    if (data.status==1){
+                        //location.reload();
+                    }else if(data.status==0){
+                        alert('下拉失败');
+                    }
+                }
+            })
+        })
+    });
+    $(function () {
+        $(".del").click(function(){
+            var tid=$(this).attr("name");
+            if(confirm("确认要删除吗？")){
+             $.ajax({
+                 url:"{:U(newsdel)}",
+                 type:'post',
+                 data:{nid:tid},
+                 success:function (data) {
+                     if (data.status==1){
+                         alert('删除成功');
+                         location.reload();
+                     }else if(data.status==0){
+                         alert('删除失败');
+                     }
+                 }
+             })
+            }
+        })
+    })
+
+</script>
+</body>
+</html>
