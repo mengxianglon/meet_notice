@@ -1,0 +1,31 @@
+<script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript">
+    wx.config({
+        debug: false,
+        appId: '{$signPackage.appId}',
+        timestamp:'{$signPackage.timestamp}',
+        nonceStr:'{$signPackage.nonceStr}',
+        signature:'{$signPackage.signature}',
+        jsApiList: [
+            // 所有要调用的 API 都要加到这个列表中
+            'onMenuShareAppMessage,onMenuShareTimeline,onMenuShareQQ,onMenuShareWeibo,onMenuShareQZone'
+        ]
+    });
+    wx.ready(function () {
+        // 分享到朋友圈
+        var options ={
+            title: '河南公共健康网',
+            desc: '健康网，健康减肥，中医中药，药膳食谱，美容护肤，药品，养生，保健，两性，健康小常识，心理健康，医疗,公共健康,健康门户,河南公共健康网,大众公共健康,公共健康河南网',
+            link: '{$signPackage.url}',
+            imgUrl:'http://{$getroot}/Public/Home/images/wxshare.png',
+            success: function () {
+                //alert('分享成功');
+            },
+        }
+        wx.onMenuShareTimeline(options); // 分享给朋友
+        wx.onMenuShareAppMessage(options);//分享到微信app
+        wx.onMenuShareQQ(options); // 分享到QQ
+        wx.onMenuShareWeibo(options);// 微信到腾讯微博
+        wx.onMenuShareQZone(options);// 分享到QQ空间
+    });
+</script>
